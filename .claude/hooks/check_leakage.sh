@@ -19,8 +19,11 @@ case "$path" in
 esac
 
 cd "${CLAUDE_PROJECT_DIR:-.}" || exit 0
-if ! out=$(python -m pytest tests/test_leakage.py -q 2>&1); then
-  echo "Leakage tests failed after editing $path:" >&2
+# Full suite, not just test_leakage.py: the row-loss bound lives in
+# test_contract.py, and a silent encoder NaN was invisible to the leakage
+# tests alone (see docs/SEEDED_FAULTS.md, fault 3b).
+if ! out=$(python -m pytest tests/ -q 2>&1); then
+  echo "Tests failed after editing $path:" >&2
   echo "$out" | tail -20 >&2
   exit 2
 fi
