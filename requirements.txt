@@ -1,7 +1,9 @@
 # Pinned so `make all` reproduces reports/metrics.json to the printed digit.
 # HistGradientBoostingRegressor in particular changes results across
 # scikit-learn releases; an unpinned install will drift the hgb row.
-numpy==2.5.3
+# numpy 2.5.3 is not on the package index; 2.4.6 is the newest installable
+# version and the one metrics.json was produced with.
+numpy==2.4.6
 pandas==3.0.5
 pyarrow==26.0.1
 scikit-learn==1.9.1
