@@ -51,6 +51,10 @@ FORBIDDEN = LEAKAGE_COLS | TIME_INDEX_COLS | UNVERIFIED_COLS
 #    dteday-derived calendar features and are not used.
 RAW_SOURCE_COLS = {"season", "mnth", "holiday", "weekday", "workday", "weather"}
 
+# sha256 of data/raw/bike_daily.csv as committed. The raw file is immutable;
+# tests/test_contract.py fails if anything (including a Bash cp) changes it.
+RAW_SHA256 = "a6bed1577f6e4de56dcfae6d8315985073cc0ad3446c8c99ed60c86a0b5ad9dc"
+
 # Temporal split: train on 2011, validate on H1 2012, test on H2 2012.
 TRAIN_END = "2011-12-31"
 VALID_END = "2012-06-30"

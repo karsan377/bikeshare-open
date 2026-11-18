@@ -67,3 +67,14 @@ def test_every_raw_column_is_classified(raw, feats):
     classified = FORBIDDEN | RAW_SOURCE_COLS | set(feature_columns(feats)) | {"dteday"}
     unknown = set(raw.columns) - classified
     assert not unknown, f"unclassified raw columns: {sorted(unknown)}"
+
+
+def test_raw_csv_is_unmodified():
+    """data/raw is immutable. A Bash cp into it never reaches the Edit|Write
+    hook, so this test is what catches it on the next make test."""
+    import hashlib
+
+    from src.config import RAW, RAW_SHA256
+
+    digest = hashlib.sha256(RAW.read_bytes()).hexdigest()
+    assert digest == RAW_SHA256, f"raw CSV changed: sha256 {digest}"
