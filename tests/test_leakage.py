@@ -57,6 +57,18 @@ def test_rolling_mean_excludes_today(feats):
         assert feats.set_index("dteday").cnt_roll_7[date] == pytest.approx(expected)
 
 
+def test_cnt_roll_30_is_mean_of_prior_30_days(feats):
+    """cnt_roll_30 on 2011-06-15 must be the mean of cnt over the 30 calendar
+    days strictly before it (2011-05-16 .. 2011-06-14). Hand-summed from the
+    raw CSV, not from build_features, so it cannot share a bug with it."""
+    raw = load_raw().set_index("dteday")[TARGET]
+    day = pd.Timestamp("2011-06-15")
+    window = [day - pd.Timedelta(days=k) for k in range(1, 31)]
+    expected = sum(raw[d] for d in window) / 30
+    got = feats.set_index("dteday").cnt_roll_30[day]
+    assert got == pytest.approx(expected)
+
+
 def test_no_missing_values(feats):
     assert feats[feature_columns(feats)].isna().sum().sum() == 0
 
