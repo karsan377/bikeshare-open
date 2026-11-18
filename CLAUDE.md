@@ -23,6 +23,10 @@ rides) from calendar, weather, and lagged-demand features.
 - Report the mean baseline **and** the persistence baseline (yesterday's
   count) alongside every model. A negative R^2 is a finding, not a bug
   to hide.
+- **Never** edit `data/raw/bike_daily.csv`. Its sha256 is pinned in
+  `src/config.py` (`RAW_SHA256`), and `test_raw_csv_is_unmodified` fails on any change.
+- Every raw column must be classified in `src/config.py`: `FORBIDDEN`,
+  `RAW_SOURCE_COLS`, or a feature. `test_every_raw_column_is_classified` enforces it.
 
 ## Style
 - Standard library, pandas, scikit-learn only. No new dependencies
@@ -31,7 +35,15 @@ rides) from calendar, weather, and lagged-demand features.
   summary.
 - Paths and constants live in `src/config.py`. Nothing is hardcoded twice.
 
+## Features and skills
+- New feature: `/new-feature <description>`. Failing test first, then feature.
+- Feature value check: `/ablation <feature>` (validation only).
+- `LAG_WARMUP` (30) is the longest window. Its value is not used as a window
+  length; each window is written as a literal, so changing it does not move
+  the others.
+
 ## Gotchas
+- `numpy==2.5.3` is not on the package index; `requirements.txt` pins 2.4.6.
 - The mirror in `DATA_URL` is missing 2011-03-10. It is NOT the UCI file:
   728 rows from 2011-01-03, not 731 from 2011-01-01.
 - `weather` uses the labels `GOOD` / `MISTY` / `BAD`, not the UCI codes 1-4.
