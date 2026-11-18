@@ -69,11 +69,13 @@ def build_features(df: pd.DataFrame) -> pd.DataFrame:
     out["weather_severity"] = encode_weather(out.weather)
 
     # --- Lagged target: past values only. shift(1) is the whole ballgame;
-    # without it, cnt_roll_7 would contain today's count. -----------------
-    # If you add a longer lag, raise LAG_WARMUP in src/config.py.
+    # without it, the rolling means would contain today's count. ----------
+    # LAG_WARMUP (src/config.py) is the longest window below; keep it equal
+    # to the largest number here.
     out["cnt_lag_1"] = out[TARGET].shift(1)
-    out["cnt_lag_7"] = out[TARGET].shift(LAG_WARMUP)
-    out["cnt_roll_7"] = out[TARGET].shift(1).rolling(LAG_WARMUP).mean()
+    out["cnt_lag_7"] = out[TARGET].shift(7)
+    out["cnt_roll_7"] = out[TARGET].shift(1).rolling(7).mean()
+    out["cnt_roll_30"] = out[TARGET].shift(1).rolling(30).mean()
 
     return out.dropna().reset_index(drop=True)
 
