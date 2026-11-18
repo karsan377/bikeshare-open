@@ -45,6 +45,12 @@ UNVERIFIED_COLS = {"cnt_2d_bfr"}
 # What feature_columns() and the tests actually enforce.
 FORBIDDEN = LEAKAGE_COLS | TIME_INDEX_COLS | UNVERIFIED_COLS
 
+# 4. Source: raw columns the features are built from, not fed to the model as
+#    they are. holiday/workday/weather become is_holiday/is_workday/
+#    weather_severity. season, mnth and weekday are superseded by the
+#    dteday-derived calendar features and are not used.
+RAW_SOURCE_COLS = {"season", "mnth", "holiday", "weekday", "workday", "weather"}
+
 # Temporal split: train on 2011, validate on H1 2012, test on H2 2012.
 TRAIN_END = "2011-12-31"
 VALID_END = "2012-06-30"
